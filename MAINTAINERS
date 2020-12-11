@@ -6751,6 +6751,11 @@ S:	Maintained
 F:	Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml
 F:	drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
 
+DRM DRIVER FOR LG.PHILIPS SW43101 PANEL
+M:	Yassine Oudjana <y.oudjana@protonmail.com>
+S:	Maintained
+F:	drivers/gpu/drm/panel/panel-lgphilips-sw43101.c
+
 DRM DRIVER FOR LOGICVC DISPLAY CONTROLLER
 M:	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 S:	Supported
