@@ -37,6 +37,10 @@
 	monitored-battery = <&battery>;
 };
 
+&pmi8998_fg {
+	monitored-battery = <&battery>;
+};
+
 &sound {
 	model = "OnePlus 6T";
 	audio-routing = "RX_BIAS", "MCLK",
