@@ -2374,7 +2374,7 @@
 				 <&mmcc SMMU_MDP_AHB_CLK>;
 			clock-names = "bus", "iface";
 
-			power-domains = <&mmcc MDSS_GDSC>;
+			power-domains = <&mmcc MMAGIC_MDSS_GDSC>;
 		};
 
 		venus_smmu: iommu@d40000 {
