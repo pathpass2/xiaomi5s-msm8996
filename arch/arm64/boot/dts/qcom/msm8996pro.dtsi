@@ -289,3 +289,7 @@
 	};
 	/* The rest is inherited from msm8996 */
 };
+
+&kryocc {
+	compatible = "qcom,msm8996pro-apcc";
+};
