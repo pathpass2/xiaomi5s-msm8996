@@ -105,6 +105,10 @@
 	qcom,switching-freq = <600>;
 };
 
+&pmi8996_smbchg {
+	monitored-battery = <&battery>;
+};
+
 &q6asmdai {
 	dai@0 {
 		reg = <0>;
