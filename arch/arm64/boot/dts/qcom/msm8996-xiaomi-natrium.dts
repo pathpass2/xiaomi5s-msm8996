@@ -89,6 +89,15 @@
 	monitored-battery = <&battery>;
 };
 
+&pmi8994_haptics {
+	status = "okay";
+
+	qcom,wave-play-rate-us = <4166>;
+	qcom,actuator-type = <HAP_TYPE_LRA>;
+	qcom,wave-shape = <HAP_WAVE_SINE>;
+	qcom,brake-pattern = [03 03 03 02];
+};
+
 &pmi8994_wled {
 	status = "okay";
 
