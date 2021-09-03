@@ -24,10 +24,6 @@
 	qcom,msm-id = <246 0x30001>; /* MSM8996 V3.1 (Final) */
 	qcom,board-id = <8 0>;
 
-	chosen {
-		bootargs = "maxcpus=2";
-	};
-
 	reserved-memory {
 		ramoops@a7f00000 {
 			compatible = "ramoops";
