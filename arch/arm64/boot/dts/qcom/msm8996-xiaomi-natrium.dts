@@ -16,6 +16,14 @@
 	chassis-type = "handset";
 	qcom,msm-id = <305 0x10000>;
 	qcom,board-id = <47 0>;
+
+	battery: battery {
+		compatible = "simple-battery";
+
+		charge-full-design-microamp-hours = <3800000>;
+		voltage-min-design-microvolt = <3400000>;
+		voltage-max-design-microvolt = <4400000>;
+	};
 };
 
 &adsp_pil {
@@ -75,6 +83,10 @@
 &mss_pil {
 	firmware-name = "qcom/msm8996/natrium/mba.mbn",
 			"qcom/msm8996/natrium/modem.mbn";
+};
+
+&pmi8994_fg {
+	monitored-battery = <&battery>;
 };
 
 &pmi8994_wled {
