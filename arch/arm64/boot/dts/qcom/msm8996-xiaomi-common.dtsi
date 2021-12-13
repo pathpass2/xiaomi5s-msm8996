@@ -141,6 +141,20 @@
 		regulator-boot-on;
 	};
 
+	vdd_cam_1p1: vdd-cam-1p1 {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_cam_1p1";
+		regulator-min-microvolt = <1100000>;
+		regulator-max-microvolt = <1100000>;
+		vin-supply = <&vreg_s3a_1p3>;
+		regulator-allow-set-load;
+
+		gpio = <&tlmm 86 0>;
+		enable-active-high;
+		pinctrl-names = "default";
+		pinctrl-0 = <&vdd_cam_1p1_default>;
+	};
+
 	vdd_3v2_tp: vdd-3v2-tp {
 		compatible = "regulator-fixed";
 		regulator-name = "vdd_3v2_tp";
@@ -636,10 +650,12 @@
 			regulator-max-microvolt = <1800000>;
 		};
 		vreg_lvs1a_1p8: lvs1 {
+			regulator-name = "vreg_lvs1a_1p8";
 			regulator-min-microvolt = <1800000>;
 			regulator-max-microvolt = <1800000>;
 		};
 		vreg_lvs2a_1p8: lvs2 {
+			regulator-name = "vreg_lvs2a_1p8";
 			regulator-min-microvolt = <1800000>;
 			regulator-max-microvolt = <1800000>;
 		};
@@ -741,6 +757,34 @@
 };
 
 &tlmm {
+	cam_sensor_rear_default: cam-sensor-rear-default-state {
+		pins = "gpio30";
+		function = "gpio";
+		drive-strength = <2>;
+		bias-disable;
+	};
+
+	cam_sensor_rear_sleep: cam-sensor-rear-sleep-state {
+		pins = "gpio30";
+		function = "gpio";
+		drive-strength = <2>;
+		bias-pull-up;
+	};
+
+	mclk0_default: mclk0-default-state {
+		pins = "gpio13";
+		function = "cam_mclk";
+		drive-strength = <2>;
+		bias-disable;
+	};
+
+	mclk0_sleep: mclk0-sleep-state {
+		pins = "gpio13";
+		function = "gpio";
+		drive-strength = <2>;
+		bias-pull-down;
+	};
+
 	mdss_dsi_default: mdss-dsi-default-state {
 		pins = "gpio8";
 		function = "gpio";
@@ -774,5 +818,12 @@
 		function = "gpio";
 		drive-strength = <16>;
 		bias-pull-up;
+	};
+
+	vdd_cam_1p1_default: vdd-cam-1p1-default-state {
+		pins = "gpio86";
+		function = "gpio";
+		drive-strength = <16>;
+		bias-disable;
 	};
 };
