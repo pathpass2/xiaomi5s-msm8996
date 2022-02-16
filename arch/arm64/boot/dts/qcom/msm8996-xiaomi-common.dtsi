@@ -11,6 +11,13 @@
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
 
 / {
+	battery: battery {
+		compatible = "simple-battery";
+
+		voltage-min-design-microvolt = <3400000>;
+		voltage-max-design-microvolt = <4400000>;
+	};
+
 	clocks {
 		compatible = "simple-bus";
 
