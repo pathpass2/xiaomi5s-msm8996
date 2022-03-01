@@ -107,6 +107,19 @@
 	};
 };
 
+&blsp2_i2c1 {
+	status = "okay";
+
+	fusb301: fusb301@21 {
+		compatible = "onnn,fusb301";
+		reg = <0x21>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&fusb301_gpios>;
+		interrupt-parent = <&pmi8994_gpios>;
+		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+	};
+};
+
 &blsp1_uart2 {
 	label = "BT-UART";
 	uart-has-rtscts;
@@ -308,6 +321,19 @@
 		regulator-max-microvolt = <1140000>;
 		regulator-max-step-microvolt = <150000>;
 		regulator-always-on;
+	};
+};
+
+&pmi8994_gpios {
+	fusb301_gpios: fusb301-state {
+		pinconf {
+			pins = "gpio5", "gpio6";
+			function = PMIC_GPIO_FUNC_NORMAL;
+			input-enable;
+			bias-pull-up;
+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+			power-source = <PM8994_GPIO_S4>; // 1.8V
+		};
 	};
 };
 
@@ -792,6 +818,8 @@
 };
 
 &usb3 {
+	extcon = <&fusb301>;
+
 	status = "okay";
 };
 
@@ -804,6 +832,8 @@
 	vbus-supply = <&chg_otg>;
 
 	usb-psy-name = "qcom-smbchg-usb";
+
+	extcon = <&fusb301>;
 };
 
 &venus {
