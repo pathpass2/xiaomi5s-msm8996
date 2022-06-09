@@ -7,9 +7,6 @@
 
 #include "msm8996.dtsi"
 #include "msm8996-xiaomi-common.dtsi"
-#include <dt-bindings/sound/qcom,q6afe.h>
-#include <dt-bindings/sound/qcom,q6asm.h>
-#include <dt-bindings/sound/qcom,wcd9335.h>
 #include <dt-bindings/input/ti-drv260x.h>
 
 / {
@@ -153,82 +150,12 @@
 			"qcom/msm8996/gemini/modem.mbn";
 };
 
-&q6asmdai {
-	dai@0 {
-		reg = <0>;
-	};
-
-	dai@1 {
-		reg = <1>;
-	};
-
-	dai@2 {
-		reg = <2>;
-	};
-};
-
 &slpi_pil {
 	firmware-name = "qcom/msm8996/gemini/slpi.mbn";
 };
 
 &sound {
-	compatible = "qcom,apq8096-sndcard";
 	model = "gemini";
-	audio-routing = "RX_BIAS", "MCLK",
-		"MM_DL1",  "MultiMedia1 Playback",
-		"MM_DL2",  "MultiMedia2 Playback",
-		"MultiMedia3 Capture", "MM_UL3";
-
-	mm1-dai-link {
-		link-name = "MultiMedia1";
-		cpu {
-			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA1>;
-		};
-	};
-
-	mm2-dai-link {
-		link-name = "MultiMedia2";
-		cpu {
-			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA2>;
-		};
-	};
-
-	mm3-dai-link {
-		link-name = "MultiMedia3";
-		cpu {
-			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA3>;
-		};
-	};
-
-	slim-dai-link {
-		link-name = "SLIM Playback";
-		cpu {
-			sound-dai = <&q6afedai SLIMBUS_6_RX>;
-		};
-
-		platform {
-			sound-dai = <&q6routing>;
-		};
-
-		codec {
-			sound-dai = <&wcd9335 AIF4_PB>;
-		};
-	};
-
-	slimcap-dai-link {
-		link-name = "SLIM Capture";
-		cpu {
-			sound-dai = <&q6afedai SLIMBUS_0_TX>;
-		};
-
-		platform {
-			sound-dai = <&q6routing>;
-		};
-
-		codec {
-			sound-dai = <&wcd9335 AIF1_CAP>;
-		};
-	};
 };
 
 &venus {
