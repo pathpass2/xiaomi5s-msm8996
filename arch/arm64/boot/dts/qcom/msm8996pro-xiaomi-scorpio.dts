@@ -253,10 +253,6 @@
 	};
 };
 
-&pmi8994_fg {
-	monitored-battery = <&battery>;
-};
-
 &pmi8994_haptics {
 	status = "okay";
 
@@ -265,6 +261,10 @@
 	qcom,wave-shape = <HAP_WAVE_SINE>;
 	qcom,wave-play-rate-us = <5000>;
 	qcom,vmax-mv = <2830>;
+};
+
+&pmi8996_fg {
+	monitored-battery = <&battery>;
 };
 
 &pmi8996_smbchg {

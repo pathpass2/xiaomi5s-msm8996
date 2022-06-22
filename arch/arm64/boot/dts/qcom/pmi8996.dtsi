@@ -14,6 +14,10 @@
 	qcom,pmic-id = <0x20009 0x10013 0 0>;
 };
 
+pmi8996_fg: &pmi8994_fg {
+	compatible = "qcom,pmi8996-fg";
+};
+
 pmi8996_smbchg: &pmi8994_smbchg {
 	compatible = "qcom,pmi8996-smbcharger";
 };
