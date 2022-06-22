@@ -142,6 +142,7 @@
 	{"AIF1_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id " MUX"}, \
 	{"AIF2_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id " MUX"}, \
 	{"AIF3_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id " MUX"}, \
+	{"AIF4_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id " MUX"}, \
 	{"SLIM TX" #id " MUX", "DEC" #id, "ADC MUX" #id}, \
 	{"ADC MUX" #id, "DMIC", "DMIC MUX" #id},	\
 	{"ADC MUX" #id, "AMIC", "AMIC MUX" #id},	\
@@ -1353,6 +1354,7 @@ static int slim_tx_mixer_put(struct snd_kcontrol *kc,
 	case AIF1_CAP:
 	case AIF2_CAP:
 	case AIF3_CAP:
+	case AIF4_CAP:
 		/* only add to the list if value not set */
 		if (enable && wcd->tx_port_value[port_id] != dai_id) {
 			wcd->tx_port_value[port_id] = dai_id;
@@ -1451,6 +1453,27 @@ static const struct snd_kcontrol_new aif2_cap_mixer[] = {
 };
 
 static const struct snd_kcontrol_new aif3_cap_mixer[] = {
+	SOC_SINGLE_EXT("SLIM TX0", SND_SOC_NOPM, WCD9335_TX0, 1, 0,
+			slim_tx_mixer_get, slim_tx_mixer_put),
+	SOC_SINGLE_EXT("SLIM TX1", SND_SOC_NOPM, WCD9335_TX1, 1, 0,
+			slim_tx_mixer_get, slim_tx_mixer_put),
+	SOC_SINGLE_EXT("SLIM TX2", SND_SOC_NOPM, WCD9335_TX2, 1, 0,
+			slim_tx_mixer_get, slim_tx_mixer_put),
+	SOC_SINGLE_EXT("SLIM TX3", SND_SOC_NOPM, WCD9335_TX3, 1, 0,
+			slim_tx_mixer_get, slim_tx_mixer_put),
+	SOC_SINGLE_EXT("SLIM TX4", SND_SOC_NOPM, WCD9335_TX4, 1, 0,
+			slim_tx_mixer_get, slim_tx_mixer_put),
+	SOC_SINGLE_EXT("SLIM TX5", SND_SOC_NOPM, WCD9335_TX5, 1, 0,
+			slim_tx_mixer_get, slim_tx_mixer_put),
+	SOC_SINGLE_EXT("SLIM TX6", SND_SOC_NOPM, WCD9335_TX6, 1, 0,
+			slim_tx_mixer_get, slim_tx_mixer_put),
+	SOC_SINGLE_EXT("SLIM TX7", SND_SOC_NOPM, WCD9335_TX7, 1, 0,
+			slim_tx_mixer_get, slim_tx_mixer_put),
+	SOC_SINGLE_EXT("SLIM TX8", SND_SOC_NOPM, WCD9335_TX8, 1, 0,
+			slim_tx_mixer_get, slim_tx_mixer_put),
+};
+
+static const struct snd_kcontrol_new aif4_cap_mixer[] = {
 	SOC_SINGLE_EXT("SLIM TX0", SND_SOC_NOPM, WCD9335_TX0, 1, 0,
 			slim_tx_mixer_get, slim_tx_mixer_put),
 	SOC_SINGLE_EXT("SLIM TX1", SND_SOC_NOPM, WCD9335_TX1, 1, 0,
@@ -2041,6 +2064,7 @@ static int wcd9335_get_channel_map(struct snd_soc_dai *dai,
 	case AIF1_CAP:
 	case AIF2_CAP:
 	case AIF3_CAP:
+	case AIF4_CAP:
 		if (!tx_slot || !tx_num) {
 			dev_err(wcd->dev, "Invalid tx_slot %p or tx_num %p\n",
 				tx_slot, tx_num);
@@ -2166,6 +2190,20 @@ static struct snd_soc_dai_driver wcd9335_slim_dais[] = {
 			.rate_max = 384000,
 			.channels_min = 1,
 			.channels_max = 2,
+		},
+		.ops = &wcd9335_dai_ops,
+	},
+	[7] = {
+		.name = "wcd9335_tx4",
+		.id = AIF4_CAP,
+		.capture = {
+			.stream_name = "AIF4 Capture",
+			.rates = WCD9335_RATES_MASK,
+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
+			.rate_min = 8000,
+			.rate_max = 192000,
+			.channels_min = 1,
+			.channels_max = 4,
 		},
 		.ops = &wcd9335_dai_ops,
 	},
@@ -2471,6 +2509,7 @@ static const struct snd_soc_dapm_route wcd9335_audio_map[] = {
 	{"AIF1 CAP", NULL, "AIF1_CAP Mixer"},
 	{"AIF2 CAP", NULL, "AIF2_CAP Mixer"},
 	{"AIF3 CAP", NULL, "AIF3_CAP Mixer"},
+	{"AIF4 CAP", NULL, "AIF4_CAP Mixer"},
 
 	/* ADC Mux */
 	WCD9335_ADC_MUX_PATH(0),
@@ -4606,6 +4645,10 @@ static const struct snd_soc_dapm_widget wcd9335_dapm_widgets[] = {
 		AIF3_CAP, 0, wcd9335_codec_enable_slim,
 		SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
 
+	SND_SOC_DAPM_AIF_OUT_E("AIF4 CAP", "AIF4 Capture", 0, SND_SOC_NOPM,
+		AIF4_CAP, 0, wcd9335_codec_enable_slim,
+		SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
+
 	SND_SOC_DAPM_SUPPLY("MIC BIAS1", SND_SOC_NOPM, 0, 0,
 			       wcd9335_codec_enable_micbias,
 			       SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
@@ -4707,6 +4750,9 @@ static const struct snd_soc_dapm_widget wcd9335_dapm_widgets[] = {
 
 	SND_SOC_DAPM_MIXER("AIF3_CAP Mixer", SND_SOC_NOPM, AIF3_CAP, 0,
 		aif3_cap_mixer, ARRAY_SIZE(aif3_cap_mixer)),
+
+	SND_SOC_DAPM_MIXER("AIF4_CAP Mixer", SND_SOC_NOPM, AIF4_CAP, 0,
+		aif4_cap_mixer, ARRAY_SIZE(aif4_cap_mixer)),
 
 	SND_SOC_DAPM_MUX("SLIM TX0 MUX", SND_SOC_NOPM, WCD9335_TX0, 0,
 		&sb_tx0_mux),
