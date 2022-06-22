@@ -83,10 +83,6 @@
 			"qcom/msm8996/natrium/modem.mbn";
 };
 
-&pmi8994_fg {
-	monitored-battery = <&battery>;
-};
-
 &pmi8994_haptics {
 	status = "okay";
 
@@ -101,6 +97,10 @@
 
 	qcom,enabled-strings = <0 1>;
 	qcom,switching-freq = <600>;
+};
+
+&pmi8996_fg {
+	monitored-battery = <&battery>;
 };
 
 &pmi8996_smbchg {
