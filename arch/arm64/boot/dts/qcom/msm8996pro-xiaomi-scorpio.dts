@@ -149,6 +149,14 @@
 &cci_i2c0 {
 	clock-frequency = <1000000>;
 
+	ak7375: camera-lens@c {
+		compatible = "asahi-kasei,ak7375";
+		reg = <0x0c>;
+
+		vdd-supply = <&vreg_l23a_2p8>;
+		vio-supply = <&vreg_lvs1a_1p8>;
+	};
+
 	/* Rear camera */
 	camera-sensor@1a {
 		compatible = "sony,imx318";
@@ -167,6 +175,8 @@
 		pinctrl-names = "default", "sleep";
 		pinctrl-0 = <&cam_sensor_rear_default>, <&mclk0_default>;
 		pinctrl-1 = <&cam_sensor_rear_sleep>, <&mclk0_sleep>;
+
+		lens-focus = <&ak7375>;
 
 		port {
 			imx318_ep: endpoint {
