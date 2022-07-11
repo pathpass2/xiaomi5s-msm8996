@@ -6,6 +6,7 @@
 #include <linux/i2c.h>
 #include <linux/module.h>
 #include <linux/pm_runtime.h>
+#include <linux/regulator/consumer.h>
 #include <media/v4l2-ctrls.h>
 #include <media/v4l2-device.h>
 
@@ -23,17 +24,32 @@
  */
 #define AK7375_CTRL_STEPS	64
 #define AK7375_CTRL_DELAY_US	1000
+/*
+ * The vcm takes around 3 ms to power on and start taking
+ * I2C messages. This value was found experimentally due to
+ * lack of documentation.
+ */
+#define AK7375_POWER_DELAY_US	3000
 
 #define AK7375_REG_POSITION	0x0
 #define AK7375_REG_CONT		0x2
 #define AK7375_MODE_ACTIVE	0x0
 #define AK7375_MODE_STANDBY	0x40
 
+static const char * const ak7375_supply_names[] = {
+	"vdd",
+	"vio",
+};
+
+#define AK7375_NUM_SUPPLIES ARRAY_SIZE(ak7375_supply_names)
+
 /* ak7375 device structure */
 struct ak7375_device {
 	struct v4l2_ctrl_handler ctrls_vcm;
 	struct v4l2_subdev sd;
 	struct v4l2_ctrl *focus;
+	struct regulator_bulk_data supplies[AK7375_NUM_SUPPLIES];
+
 	/* active or standby mode */
 	bool active;
 };
@@ -133,11 +149,23 @@ static int ak7375_probe(struct i2c_client *client)
 {
 	struct ak7375_device *ak7375_dev;
 	int ret;
+	int i;
 
 	ak7375_dev = devm_kzalloc(&client->dev, sizeof(*ak7375_dev),
 				  GFP_KERNEL);
 	if (!ak7375_dev)
 		return -ENOMEM;
+
+	for (i = 0; i < AK7375_NUM_SUPPLIES; i++)
+		ak7375_dev->supplies[i].supply = ak7375_supply_names[i];
+
+	ret = devm_regulator_bulk_get(&client->dev, AK7375_NUM_SUPPLIES,
+				      ak7375_dev->supplies);
+	if (ret) {
+		dev_err(&client->dev, "Failed to get regulators: %pe\n",
+			ERR_PTR(ret));
+		return ret;
+	}
 
 	v4l2_i2c_subdev_init(&ak7375_dev->sd, client, &ak7375_ops);
 	ak7375_dev->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
@@ -210,6 +238,10 @@ static int __maybe_unused ak7375_vcm_suspend(struct device *dev)
 	if (ret)
 		dev_err(dev, "%s I2C failure: %d\n", __func__, ret);
 
+	ret = regulator_bulk_disable(AK7375_NUM_SUPPLIES, ak7375_dev->supplies);
+	if (ret)
+		return ret;
+
 	ak7375_dev->active = false;
 
 	return 0;
@@ -229,6 +261,13 @@ static int __maybe_unused ak7375_vcm_resume(struct device *dev)
 
 	if (ak7375_dev->active)
 		return 0;
+
+	ret = regulator_bulk_enable(AK7375_NUM_SUPPLIES, ak7375_dev->supplies);
+	if (ret)
+		return ret;
+
+	/* Wait for vcm to become ready */
+	usleep_range(AK7375_POWER_DELAY_US, AK7375_POWER_DELAY_US + 500);
 
 	ret = ak7375_i2c_write(ak7375_dev, AK7375_REG_CONT,
 		AK7375_MODE_ACTIVE, 1);
