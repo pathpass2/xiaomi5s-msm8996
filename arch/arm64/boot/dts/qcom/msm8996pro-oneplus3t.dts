@@ -4,6 +4,7 @@
 
 #include "msm8996pro.dtsi"
 #include "msm8996-oneplus3.dtsi"
+#include "pmi8996.dtsi"
 
 / {
 	model = "OnePlus 3T";
@@ -12,6 +13,15 @@
 			<8 0 15811 27>,
 			<8 0 15811 28>;
 	qcom,pmic-id = <0x20009 0x10013 0x0 0x0>;
+
+	battery: battery {
+		compatible = "simple-battery";
+
+		charge-full-design-microamp-hours = <3400000>;
+		constant-charge-current-max-microamp = <3000000>;
+		voltage-min-design-microvolt = <3400000>;
+		voltage-max-design-microvolt = <4400000>;
+	};
 };
 
 &adsp_pil {
@@ -35,4 +45,10 @@
 
 &venus {
 	firmware-name = "qcom/msm8996/oneplus3t/venus.mbn";
+};
+
+&pmi8996_smbchg {
+	status = "okay";
+	monitored-battery = <&battery>;
+	vbus-supply = <&chg_otg>;
 };
