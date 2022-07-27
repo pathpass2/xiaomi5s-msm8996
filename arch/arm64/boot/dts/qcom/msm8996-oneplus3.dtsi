@@ -269,7 +269,6 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		compatible = "samsung,s6e3fa3";
 		reg = <0>;
 
 		pinctrl-names = "default", "sleep";
