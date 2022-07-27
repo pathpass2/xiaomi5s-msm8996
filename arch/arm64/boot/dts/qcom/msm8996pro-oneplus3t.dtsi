@@ -3,8 +3,6 @@
  * Copyright (c) 2022, Harry Austen <hpausten@protonmail.com>
  */
 
-/dts-v1/;
-
 #include "msm8996pro.dtsi"
 #include "msm8996-oneplus-common.dtsi"
 
