@@ -186,7 +186,6 @@
 	status = "okay";
 
 	panel: panel@0 {
-		compatible = "samsung,s6e3fa3";
 		reg = <0>;
 
 		vddio-supply = <&vreg_l18a_3p3>;
