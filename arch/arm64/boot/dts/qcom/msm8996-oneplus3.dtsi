@@ -1062,6 +1062,7 @@
 &usb3 {
 	status = "okay";
 	extcon = <&fusb301>;
+	qcom,select-utmi-as-pipe-clk;
 };
 
 &usb3_dwc3 {
@@ -1070,6 +1071,10 @@
 
 	extcon = <&fusb301>;
 	maximum-speed = "high-speed";
+
+	snps,is-utmi-l1-suspend;
+	snps,usb2-gadget-lpm-disable;
+	snps,hird-threshold = /bits/ 8 <0>;
 };
 
 &venus {
