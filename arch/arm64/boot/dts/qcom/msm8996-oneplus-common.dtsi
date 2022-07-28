@@ -863,6 +863,8 @@
 &usb3 {
 	extcon = <&fusb301>;
 
+	qcom,select-utmi-as-pipe-clk;
+
 	status = "okay";
 };
 
@@ -877,4 +879,8 @@
 	usb-psy-name = "qcom-smbchg-usb";
 
 	extcon = <&fusb301>;
+
+	snps,is-utmi-l1-suspend;
+	snps,usb2-gadget-lpm-disable;
+	snps,hird-threshold = /bits/ 8 <0>;
 };
