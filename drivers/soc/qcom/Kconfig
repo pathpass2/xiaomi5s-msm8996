@@ -91,6 +91,10 @@ config QCOM_PDR_HELPERS
 	tristate
 	select QCOM_QMI_HELPERS
 
+config QCOM_PMIC_SEC_WRITE
+	tristate
+	depends on REGMAP
+
 config QCOM_QMI_HELPERS
 	tristate
 	depends on NET
