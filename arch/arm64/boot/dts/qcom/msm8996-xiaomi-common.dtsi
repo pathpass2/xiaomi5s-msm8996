@@ -14,6 +14,13 @@
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
 
 / {
+	battery: battery {
+		compatible = "simple-battery";
+
+		voltage-min-design-microvolt = <3400000>;
+		voltage-max-design-microvolt = <4400000>;
+	};
+
 	clocks {
 		compatible = "simple-bus";
 
@@ -297,6 +304,12 @@
 	linux,code = <KEY_VOLUMEDOWN>;
 };
 
+&pmi8994_smbchg {
+	status = "okay";
+
+	monitored-battery = <&battery>;
+};
+
 &slpi_pil {
 	status = "okay";
 
@@ -316,6 +329,8 @@
 	/* usb3-phy is not used on this device */
 	phys = <&hsusb_phy1>;
 	phy-names = "usb2-phy";
+
+	usb-psy-name = "qcom-smbchg-usb";
 
 	maximum-speed = "high-speed";
 	snps,is-utmi-l1-suspend;

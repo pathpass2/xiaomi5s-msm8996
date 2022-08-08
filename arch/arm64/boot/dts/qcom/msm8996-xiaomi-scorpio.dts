@@ -59,6 +59,11 @@
 	firmware-name = "qcom/msm8996/scorpio/adsp.mbn";
 };
 
+&battery {
+	charge-full-design-microamp-hours = <4070000>;
+	constant-charge-current-max-microamp = <3100000>;
+};
+
 &blsp2_i2c6 {
 	touchkey: touchkey@28 {
 		compatible = "cypress,sf3155";

@@ -22,6 +22,11 @@
 	firmware-name = "qcom/msm8996/natrium/adsp.mbn";
 };
 
+&battery {
+	charge-full-design-microamp-hours = <3800000>;
+	constant-charge-current-max-microamp = <3200000>;
+};
+
 &blsp2_i2c6 {
 	touchscreen@20 {
 		compatible = "syna,rmi4-i2c";

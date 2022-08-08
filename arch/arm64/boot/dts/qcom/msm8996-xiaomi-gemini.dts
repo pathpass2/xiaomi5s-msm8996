@@ -35,6 +35,11 @@
 	firmware-name = "qcom/msm8996/gemini/adsp.mbn";
 };
 
+&battery {
+	charge-full-design-microamp-hours = <3000000>;
+	constant-charge-current-max-microamp = <3000000>;
+};
+
 &blsp2_i2c3 {
 	haptics: drv2604@5a {
 		compatible = "ti,drv2604";
