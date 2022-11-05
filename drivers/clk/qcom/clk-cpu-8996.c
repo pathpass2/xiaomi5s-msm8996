@@ -171,20 +171,6 @@ static struct clk_fixed_factor perfcl_pll_postdiv = {
 	},
 };
 
-static struct clk_fixed_factor perfcl_pll_acd = {
-	.mult = 1,
-	.div = 1,
-	.hw.init = &(struct clk_init_data){
-		.name = "perfcl_pll_acd",
-		.parent_data = &(const struct clk_parent_data){
-			.hw = &perfcl_pll.clkr.hw
-		},
-		.num_parents = 1,
-		.ops = &clk_fixed_factor_ops,
-		.flags = CLK_SET_RATE_PARENT,
-	},
-};
-
 static struct clk_fixed_factor pwrcl_pll_acd = {
 	.mult = 1,
 	.div = 1,
@@ -192,6 +178,20 @@ static struct clk_fixed_factor pwrcl_pll_acd = {
 		.name = "pwrcl_pll_acd",
 		.parent_data = &(const struct clk_parent_data){
 			.hw = &pwrcl_pll.clkr.hw
+		},
+		.num_parents = 1,
+		.ops = &clk_fixed_factor_ops,
+		.flags = CLK_SET_RATE_PARENT,
+	},
+};
+
+static struct clk_fixed_factor perfcl_pll_acd = {
+	.mult = 1,
+	.div = 1,
+	.hw.init = &(struct clk_init_data){
+		.name = "perfcl_pll_acd",
+		.parent_data = &(const struct clk_parent_data){
+			.hw = &perfcl_pll.clkr.hw
 		},
 		.num_parents = 1,
 		.ops = &clk_fixed_factor_ops,
