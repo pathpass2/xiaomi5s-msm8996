@@ -113,6 +113,19 @@
 	status = "disabled";
 };
 
+&mmcc {
+	/*
+	 * Remove non-essential DSI PHY clocks to allow MMCC to probe
+	 * with MDSS disabled.
+	 */
+	clocks = <&xo_board>,
+		 <&gcc GCC_MMSS_NOC_CFG_AHB_CLK>,
+		 <&gcc GPLL0>;
+	clock-names = "xo",
+		      "gcc_mmss_noc_cfg_ahb_clk",
+		      "gpll0";
+};
+
 &mss_pil {
 	firmware-name = "qcom/msm8996/scorpio/mba.mbn",
 			"qcom/msm8996/scorpio/modem.mbn";
