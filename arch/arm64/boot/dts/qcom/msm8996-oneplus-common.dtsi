@@ -801,6 +801,8 @@
 
 	maximum-speed = "high-speed";
 
+	vbus-supply = <&chg_otg>;
+
 	usb-psy-name = "qcom-smbchg-usb";
 };
 
