@@ -410,6 +410,8 @@
 	phys = <&hsusb_phy1>;
 	phy-names = "usb2-phy";
 
+	vbus-supply = <&chg_otg>;
+
 	usb-psy-name = "qcom-smbchg-usb";
 
 	maximum-speed = "high-speed";
