@@ -322,6 +322,12 @@
 	};
 };
 
+&pmi8996_smbchg {
+	monitored-battery = <&battery>;
+
+	status = "okay";
+};
+
 &q6asmdai {
 	#address-cells = <1>;
 	#size-cells = <0>;
@@ -837,4 +843,6 @@
 	phy-names = "usb2-phy";
 
 	maximum-speed = "high-speed";
+
+	usb-psy-name = "qcom-smbchg-usb";
 };
