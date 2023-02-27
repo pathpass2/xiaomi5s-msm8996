@@ -916,6 +916,14 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
 	gpu_write(gpu, REG_A5XX_CP_RB_CNTL,
 		MSM_GPU_RB_CNTL_DEFAULT | AXXX_CP_RB_CNTL_NO_UPDATE);
 
+#ifdef CONFIG_DRM_MSM_GPU_A5XX_NO_PREEMPT
+	/*
+	 * Set has_whereami to false to disable preemption and to
+	 * prevent accesses to uninitialized shadow register
+	 */
+	a5xx_gpu->has_whereami = false;
+#endif /* CONFIG_DRM_MSM_GPU_A5XX_NO_PREEMPT */
+
 	/* Create a privileged buffer for the RPTR shadow */
 	if (a5xx_gpu->has_whereami) {
 		if (!a5xx_gpu->shadow_bo) {
