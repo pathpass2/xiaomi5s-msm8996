@@ -605,6 +605,13 @@ static int a5xx_ucode_load(struct msm_gpu *gpu)
 		a5xx_ucode_check_version(a5xx_gpu, a5xx_gpu->pfp_bo);
 	}
 
+#ifdef CONFIG_DRM_MSM_GPU_A5XX_NO_PREEMPT
+	/*
+	 * Set has_whereami to false to disable preemption and to
+	 * prevent accesses to uninitialized shadow register
+	 */
+	a5xx_gpu->has_whereami = false;
+#endif /* CONFIG_DRM_MSM_GPU_A5XX_NO_PREEMPT */
 	if (a5xx_gpu->has_whereami) {
 		if (!a5xx_gpu->shadow_bo) {
 			a5xx_gpu->shadow = msm_gem_kernel_new(gpu->dev,

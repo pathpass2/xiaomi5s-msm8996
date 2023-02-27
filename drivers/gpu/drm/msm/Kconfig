@@ -54,6 +54,11 @@ config DRM_MSM_GPU_SUDO
 	  Only use this if you are a driver developer.  This should *not*
 	  be enabled for production kernels.  If unsure, say N.
 
+config DRM_MSM_GPU_A5XX_NO_PREEMPT
+	bool "Disable preemption on A5XX GPUs"
+	depends on DRM_MSM && EXPERT
+	default n
+
 config DRM_MSM_MDSS
 	bool
 	depends on DRM_MSM
