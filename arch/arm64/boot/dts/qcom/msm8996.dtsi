@@ -2118,7 +2118,9 @@
 				"vfe0",
 				"vfe1";
 			power-domains = <&mmcc VFE0_GDSC>,
-					<&mmcc VFE1_GDSC>;
+					<&mmcc VFE1_GDSC>,
+					<&mmcc CAMSS_GDSC>;
+			power-domain-names = "vfe0", "vfe1", "camss";
 			clocks = <&mmcc CAMSS_TOP_AHB_CLK>,
 				<&mmcc CAMSS_ISPIF_AHB_CLK>,
 				<&mmcc CAMSS_CSI0PHYTIMER_CLK>,
