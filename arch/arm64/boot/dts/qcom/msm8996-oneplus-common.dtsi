@@ -29,24 +29,22 @@
 		stdout-path = "serial1:115200n8";
 	};
 
-	clocks {
-		div1_mclk: div1-clk {
-			compatible = "gpio-gate-clock";
-			pinctrl-names = "default";
-			pinctrl-0 = <&audio_mclk>;
-			#clock-cells = <0>;
-			clocks = <&rpmcc RPM_SMD_DIV_CLK1>;
-			enable-gpios = <&pm8994_gpios 15 GPIO_ACTIVE_HIGH>;
-		};
+	div1_mclk: div1-clk {
+		compatible = "gpio-gate-clock";
+		pinctrl-names = "default";
+		pinctrl-0 = <&audio_mclk>;
+		#clock-cells = <0>;
+		clocks = <&rpmcc RPM_SMD_DIV_CLK1>;
+		enable-gpios = <&pm8994_gpios 15 GPIO_ACTIVE_HIGH>;
+	};
 
-		divclk4: div4-clk {
-			compatible = "fixed-clock";
-			pinctrl-names = "default";
-			pinctrl-0 = <&divclk4_pin_a>;
-			#clock-cells = <0>;
-			clock-frequency = <32768>;
-			clock-output-names = "divclk4";
-		};
+	divclk4: div4-clk {
+		compatible = "fixed-clock";
+		pinctrl-names = "default";
+		pinctrl-0 = <&divclk4_pin_a>;
+		#clock-cells = <0>;
+		clock-frequency = <32768>;
+		clock-output-names = "divclk4";
 	};
 
 	reserved-memory {
