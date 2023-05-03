@@ -1453,6 +1453,7 @@ static const struct media_device_ops camss_media_ops = {
 static int camss_configure_pd(struct camss *camss)
 {
 	struct device *dev = camss->dev;
+	int camss_pd_index;
 	int i;
 	int ret;
 
@@ -1496,7 +1497,13 @@ static int camss_configure_pd(struct camss *camss)
 		}
 	}
 
-	if (i > camss->vfe_num) {
+	/* Link CAMSS power domain if available */
+	camss_pd_index = device_property_match_string(camss->dev, "power-domain-names", "camss");
+	if (camss_pd_index >= 0)
+		device_link_add(camss->dev, camss->genpd[camss_pd_index], DL_FLAG_STATELESS |
+				DL_FLAG_PM_RUNTIME | DL_FLAG_RPM_ACTIVE);
+
+	if (i > camss->vfe_num && i != camss_pd_index) {
 		camss->genpd_link[i - 1] = device_link_add(camss->dev, camss->genpd[i - 1],
 							   DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME |
 							   DL_FLAG_RPM_ACTIVE);
