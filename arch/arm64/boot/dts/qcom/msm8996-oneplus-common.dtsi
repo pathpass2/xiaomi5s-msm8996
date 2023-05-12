@@ -201,6 +201,27 @@
 		enable-gpios = <&tlmm 94 GPIO_ACTIVE_HIGH>;
 		firmware-gpios = <&tlmm 12 GPIO_ACTIVE_HIGH>;
 	};
+
+       s1302: touchkey@20 {
+               compatible = "syna,rmi4-i2c";
+               reg = <0x20>;
+               #address-cells = <1>;
+               #size-cells = <0>;
+               interrupt-parent = <&tlmm>;
+               interrupts-extended = <&tlmm 132 IRQ_TYPE_LEVEL_LOW>;
+               pinctrl-names = "default", "sleep";
+               pinctrl-0 = <&touchkeys_default>;
+               pinctrl-1 = <&touchkeys_suspend>;
+               vdd-supply = <&vreg_l13a_2p95>;
+               vio-supply = <&vreg_s4a_1p8>;
+               syna,reset-delay-ms = <200>;
+               syna,startup-delay-ms = <200>;
+
+               rmi4-f1a@1a {
+                       reg = <0x1a>;
+                       syna,codes = <KEY_BACK KEY_APPSELECT>;
+               };
+       };
 };
 
 &blsp2_i2c6 {
@@ -403,7 +424,7 @@
 		     <0 0>,
 		     <4 1>;
 
-	multi-led {
+	status-led {
 		color = <LED_COLOR_ID_RGB>;
 		function = LED_FUNCTION_STATUS;
 
@@ -980,6 +1001,20 @@
 		drive-strength = <2>;
 		bias-disable;
 	};
+
+       touchkeys_default: touchkeys-default {
+                pins = "gpio76", "gpio132";
+		function = "gpio";
+		drive-strength = <16>;
+		bias-pull-up;
+       };
+
+       touchkeys_suspend: touchkeys-suspend {
+                pins = "gpio76", "gpio132";
+		function = "gpio";
+		drive-strength = <2>;
+		bias-disable;
+       };
 };
 
 &ufsphy {
