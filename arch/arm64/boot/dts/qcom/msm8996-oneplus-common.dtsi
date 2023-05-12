@@ -424,6 +424,23 @@
 		     <0 0>,
 		     <4 1>;
 
+       // fixme - always on for testing
+       touchkeys_led {
+               compatible = "gpio-leds";
+
+               pinctrl-names = "default";
+               pinctrl-0 = <&mpp4_state>;
+
+               led@1 {
+                       color = <LED_COLOR_ID_WHITE>;
+                       default-state = "on";
+                       function = LED_FUNCTION_KBD_BACKLIGHT;
+                       gpios = <&pmi8994_mpps 4 GPIO_ACTIVE_LOW>;
+                       label = "white:kbd_backlight";
+                       retain-state-suspended;
+               };
+        };
+
 	status-led {
 		color = <LED_COLOR_ID_RGB>;
 		function = LED_FUNCTION_STATUS;
