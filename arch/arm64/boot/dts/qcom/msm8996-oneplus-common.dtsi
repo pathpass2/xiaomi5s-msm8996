@@ -188,6 +188,21 @@
 	status = "okay";
 };
 
+&blsp2_i2c2 {
+	status = "okay";
+	clock-frequency = <400000>;
+
+	pn548: nfc@28 {
+		compatible = "nxp,nxp-nci-i2c";
+		reg = <0x28>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&nfc_default>;
+		interrupts-extended = <&tlmm 9 IRQ_TYPE_EDGE_RISING>;
+		enable-gpios = <&tlmm 94 GPIO_ACTIVE_HIGH>;
+		firmware-gpios = <&tlmm 12 GPIO_ACTIVE_HIGH>;
+	};
+};
+
 &blsp2_i2c6 {
 	status = "okay";
 
@@ -943,6 +958,13 @@
 		function = "mdp_vsync";
 		drive-strength = <2>;
 		bias-pull-down;
+	};
+
+	nfc_default: nfc-default {
+		pins = "gpio12", "gpio94";
+		function = "gpio";
+		drive-strength = <16>;
+		bias-pull-up;
 	};
 
 	touch_default: touch-default-state {
