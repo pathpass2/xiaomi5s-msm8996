@@ -6,6 +6,7 @@
 #include "pm8994.dtsi"
 #include "pmi8994.dtsi"
 #include "pmi8996.dtsi"
+#include <dt-bindings/input/input.h>
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
 #include <dt-bindings/sound/qcom,q6afe.h>
@@ -45,6 +46,60 @@
 		#clock-cells = <0>;
 		clock-frequency = <32768>;
 		clock-output-names = "divclk4";
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		autorepeat;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&volume_down_gpio>, <&volume_up_gpio>, <&tristate_sw_gpios>;
+
+		button-volume-down {
+			label = "Volume Down";
+			linux,code = <KEY_VOLUMEDOWN>;
+			gpios = <&pm8994_gpios 2 GPIO_ACTIVE_LOW>;
+			debounce-interval = <15>;
+		};
+
+		button-volume-up {
+			label = "Volume Up";
+			linux,code = <KEY_VOLUMEUP>;
+			gpios = <&pm8994_gpios 3 GPIO_ACTIVE_LOW>;
+			debounce-interval = <15>;
+		};
+
+		event-hall-sensor {
+			label = "Hall Sensor";
+			gpios = <&tlmm 124 GPIO_ACTIVE_LOW>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_LID>;
+			debounce-interval = <15>;
+		};
+
+		switch-bottom {
+			label = "Tristate Switch (bottom)";
+			gpios = <&pm8994_gpios 6 GPIO_ACTIVE_HIGH>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_MUTE_DEVICE>;
+			debounce-interval = <15>;
+		};
+
+		switch-middle {
+			label = "Tristate Switch (middle)";
+			gpios = <&pm8994_gpios 4 GPIO_ACTIVE_HIGH>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_KEYPAD_SLIDE>;
+			debounce-interval = <15>;
+		};
+
+		switch-top {
+			label = "Tristate Switch (top)";
+			gpios = <&pm8994_gpios 5 GPIO_ACTIVE_HIGH>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_TABLET_MODE>;
+			debounce-interval = <15>;
+		};
 	};
 
 	reserved-memory {
@@ -280,6 +335,36 @@
 	audio_mclk: divclk1-state {
 		pins = "gpio15";
 		function = PMIC_GPIO_FUNC_FUNC1;
+		power-source = <PM8994_GPIO_S4>;
+	};
+
+	volume_down_gpio: vol-down-state {
+		pins = "gpio2";
+		function = PMIC_GPIO_FUNC_NORMAL;
+		input-enable;
+		drive-push-pull;
+		bias-pull-up;
+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+		power-source = <PM8994_GPIO_S4>;
+	};
+
+	volume_up_gpio: vol-up-state {
+		pins = "gpio3";
+		function = PMIC_GPIO_FUNC_NORMAL;
+		input-enable;
+		drive-push-pull;
+		bias-pull-up;
+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+		power-source = <PM8994_GPIO_S4>;
+	};
+
+	tristate_sw_gpios: tri-sw-gpios-state {
+		pins = "gpio4", "gpio5", "gpio6";
+		function = PMIC_GPIO_FUNC_NORMAL;
+		input-enable;
+		drive-push-pull;
+		bias-pull-up;
+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
 		power-source = <PM8994_GPIO_S4>;
 	};
 
