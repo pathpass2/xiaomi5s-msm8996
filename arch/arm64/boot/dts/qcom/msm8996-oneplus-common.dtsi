@@ -6,7 +6,9 @@
 #include "pm8994.dtsi"
 #include "pmi8994.dtsi"
 #include "pmi8996.dtsi"
+#include <dt-bindings/input/input.h>
 #include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/leds/common.h>
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
 #include <dt-bindings/sound/qcom,q6afe.h>
 #include <dt-bindings/sound/qcom,q6asm.h>
@@ -45,6 +47,60 @@
 		#clock-cells = <0>;
 		clock-frequency = <32768>;
 		clock-output-names = "divclk4";
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		autorepeat;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&volume_down_gpio>, <&volume_up_gpio>, <&tristate_sw_gpios>;
+
+		button-volume-down {
+			label = "Volume Down";
+			linux,code = <KEY_VOLUMEDOWN>;
+			gpios = <&pm8994_gpios 2 GPIO_ACTIVE_LOW>;
+			debounce-interval = <15>;
+		};
+
+		button-volume-up {
+			label = "Volume Up";
+			linux,code = <KEY_VOLUMEUP>;
+			gpios = <&pm8994_gpios 3 GPIO_ACTIVE_LOW>;
+			debounce-interval = <15>;
+		};
+
+		event-hall-sensor {
+			label = "Hall Sensor";
+			gpios = <&tlmm 124 GPIO_ACTIVE_LOW>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_LID>;
+			debounce-interval = <15>;
+		};
+
+		switch-bottom {
+			label = "Tristate Switch (bottom)";
+			gpios = <&pm8994_gpios 6 GPIO_ACTIVE_HIGH>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_MUTE_DEVICE>;
+			debounce-interval = <15>;
+		};
+
+		switch-middle {
+			label = "Tristate Switch (middle)";
+			gpios = <&pm8994_gpios 4 GPIO_ACTIVE_HIGH>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_KEYPAD_SLIDE>;
+			debounce-interval = <15>;
+		};
+
+		switch-top {
+			label = "Tristate Switch (top)";
+			gpios = <&pm8994_gpios 5 GPIO_ACTIVE_HIGH>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_TABLET_MODE>;
+			debounce-interval = <15>;
+		};
 	};
 
 	reserved-memory {
@@ -130,6 +186,42 @@
 
 &blsp2_i2c1 {
 	status = "okay";
+};
+
+&blsp2_i2c2 {
+	status = "okay";
+	clock-frequency = <400000>;
+
+	pn548: nfc@28 {
+		compatible = "nxp,nxp-nci-i2c";
+		reg = <0x28>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&nfc_default>;
+		interrupts-extended = <&tlmm 9 IRQ_TYPE_EDGE_RISING>;
+		enable-gpios = <&tlmm 94 GPIO_ACTIVE_HIGH>;
+		firmware-gpios = <&tlmm 12 GPIO_ACTIVE_HIGH>;
+	};
+
+       s1302: touchkey@20 {
+               compatible = "syna,rmi4-i2c";
+               reg = <0x20>;
+               #address-cells = <1>;
+               #size-cells = <0>;
+               interrupt-parent = <&tlmm>;
+               interrupts-extended = <&tlmm 132 IRQ_TYPE_LEVEL_LOW>;
+               pinctrl-names = "default", "sleep";
+               pinctrl-0 = <&touchkeys_default>;
+               pinctrl-1 = <&touchkeys_suspend>;
+               vdd-supply = <&vreg_l13a_2p95>;
+               vio-supply = <&vreg_s4a_1p8>;
+               syna,reset-delay-ms = <200>;
+               syna,startup-delay-ms = <200>;
+
+               rmi4-f1a@1a {
+                       reg = <0x1a>;
+                       syna,codes = <KEY_BACK KEY_APPSELECT>;
+               };
+       };
 };
 
 &blsp2_i2c6 {
@@ -283,11 +375,108 @@
 		power-source = <PM8994_GPIO_S4>;
 	};
 
+	volume_down_gpio: vol-down-state {
+		pins = "gpio2";
+		function = PMIC_GPIO_FUNC_NORMAL;
+		input-enable;
+		drive-push-pull;
+		bias-pull-up;
+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+		power-source = <PM8994_GPIO_S4>;
+	};
+
+	volume_up_gpio: vol-up-state {
+		pins = "gpio3";
+		function = PMIC_GPIO_FUNC_NORMAL;
+		input-enable;
+		drive-push-pull;
+		bias-pull-up;
+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+		power-source = <PM8994_GPIO_S4>;
+	};
+
+	tristate_sw_gpios: tri-sw-gpios-state {
+		pins = "gpio4", "gpio5", "gpio6";
+		function = PMIC_GPIO_FUNC_NORMAL;
+		input-enable;
+		drive-push-pull;
+		bias-pull-up;
+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+		power-source = <PM8994_GPIO_S4>;
+	};
+
 	divclk4_pin_a: divclk4-state {
 		pins = "gpio18";
 		function = PMIC_GPIO_FUNC_FUNC2;
 		bias-disable;
 		power-source = <PM8994_GPIO_S4>;
+	};
+};
+
+&pmi8994_lpg {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&mpp4_state>;
+	qcom,power-source = <1>;
+	qcom,dtest = <0 0>,
+		     <0 0>,
+		     <0 0>,
+		     <4 1>;
+
+       // fixme - always on for testing
+       touchkeys_led {
+               compatible = "gpio-leds";
+
+               pinctrl-names = "default";
+               pinctrl-0 = <&mpp4_state>;
+
+               led@1 {
+                       color = <LED_COLOR_ID_WHITE>;
+                       default-state = "on";
+                       function = LED_FUNCTION_KBD_BACKLIGHT;
+                       gpios = <&pmi8994_mpps 4 GPIO_ACTIVE_LOW>;
+                       label = "white:kbd_backlight";
+                       retain-state-suspended;
+               };
+        };
+
+	status-led {
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_STATUS;
+
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		led@1 {
+			reg = <1>;
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		led@2 {
+			reg = <2>;
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		led@3 {
+			reg = <3>;
+			color = <LED_COLOR_ID_RED>;
+		};
+	};
+
+	led@4 {
+		reg = <4>;
+		color = <LED_COLOR_ID_WHITE>;
+		function = LED_FUNCTION_KBD_BACKLIGHT;
+	};
+};
+
+&pmi8994_mpps {
+	mpp4_state: mpp4-state {
+		pins = "mpp4";
+		function = "sink";
+		output-low;
+		qcom,dtest = <4>;
 	};
 };
 
@@ -809,6 +998,13 @@
 		bias-pull-down;
 	};
 
+	nfc_default: nfc-default {
+		pins = "gpio12", "gpio94";
+		function = "gpio";
+		drive-strength = <16>;
+		bias-pull-up;
+	};
+
 	touch_default: touch-default-state {
 		pins = "gpio89", "gpio125", "gpio49";
 		function = "gpio";
@@ -822,6 +1018,20 @@
 		drive-strength = <2>;
 		bias-disable;
 	};
+
+       touchkeys_default: touchkeys-default {
+                pins = "gpio76", "gpio132";
+		function = "gpio";
+		drive-strength = <16>;
+		bias-pull-up;
+       };
+
+       touchkeys_suspend: touchkeys-suspend {
+                pins = "gpio76", "gpio132";
+		function = "gpio";
+		drive-strength = <2>;
+		bias-disable;
+       };
 };
 
 &ufsphy {
