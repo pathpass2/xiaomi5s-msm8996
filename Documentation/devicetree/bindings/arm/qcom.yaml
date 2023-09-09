@@ -301,6 +301,7 @@ properties:
 
       - items:
           - enum:
+              - xiaomi,capricorn
               - xiaomi,natrium
               - xiaomi,scorpio
           - const: qcom,msm8996pro
