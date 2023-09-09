@@ -94,6 +94,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-xiaomi-gemini.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-zte-axon7.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= msm8996pro-oneplus3t-s6e3fa3.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= msm8996pro-oneplus3t-s6e3fa5.dtb
+dtb-$(CONFIG_ARCH_QCOM)	+= msm8996pro-xiaomi-capricorn.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= msm8996pro-xiaomi-natrium.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= msm8996pro-xiaomi-scorpio.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-asus-novago-tp370ql.dtb
