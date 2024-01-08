@@ -38,6 +38,13 @@ properties:
        - voltage-max-design-microvolt
        See Documentation/devicetree/bindings/power/supply/battery.yaml
 
+  power-supplies:
+    items:
+      - description: |
+          Power supply to retrieve status reports from. The fuel gauge does not
+          report whether the device is charging, discharging, or full, so a
+          different device is used to determine the status.
+
 allOf:
   - if:
       properties:
