@@ -21,6 +21,14 @@ properties:
   reg:
     maxItems: 1
 
+  interrupts:
+    minItems: 1
+    maxItems: 2
+
+  interrupt-names:
+    minItems: 1
+    maxItems: 2
+
   monitored-battery:
     description: |
        phandle of battery characteristics node.
@@ -30,12 +38,19 @@ properties:
        - voltage-max-design-microvolt
        See Documentation/devicetree/bindings/power/supply/battery.yaml
 
+  power-supplies:
+    items:
+      - description: |
+          Power supply to retrieve status reports from. The fuel gauge does not
+          report whether the device is charging, discharging, or full, so a
+          different device is used to determine the status.
+
 allOf:
   - if:
       properties:
         compatible:
           enum:
-            - qcom,pm8994-fg
+            - qcom,pmi8994-fg
 
     then:
       properties:
@@ -53,7 +68,7 @@ allOf:
       properties:
         compatible:
           enum:
-            - qcom,pm8998-fg
+            - qcom,pmi8998-fg
 
     then:
       properties:
