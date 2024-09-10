@@ -210,7 +210,7 @@
 		compatible = "ti,tusb320l";
 		reg = <0x47>;
 		interrupt-parent = <&tlmm>;
-		interrupts = <63 IRQ_TYPE_EDGE_RISING>;
+		interrupts = <63 IRQ_TYPE_EDGE_FALLING>;
 	};
 };
 
