@@ -6,9 +6,8 @@ on:
       target_tag:
         description: 'Source tag to build from'
         required: true
-        default: 'xiaomi5s_v6.12.10'
-        
-
+        default: 'xiaomi5s_msm8996pro_v6.12.10'
+                
 env:
   ARCH: arm64
   src_path: ${{ github.workspace }}
@@ -55,7 +54,12 @@ jobs:
             bison \
             libncurses-dev \
             initramfs-tools \
-            busybox-static
+            busybox-static  \
+            mkbootimg  \
+            simg2img  \
+            img2simg  \
+            build-essential  \
+            binfmt-support
           sudo -E apt-get -y install $(curl -fsSL https://tinyurl.com/ubuntu2204-build-armbian)
       - name: Setup ARM Toolchain
         run: |
@@ -72,11 +76,13 @@ jobs:
           echo "armbian_path=${{ env.src_path }}/armbian_boot" >> $GITHUB_ENV
           echo "dtb_path=${{ env.src_path }}/dtbs" >> $GITHUB_ENV
           echo "armbian_file_path=${{ env.src_path }}/armbian_boot_files" >> $GITHUB_ENV
+          echo "boot_img_file=${{ env.src_path }}/boot_img_file"  >> $GITHUB_ENV
           
       - name: Build Kernel
         run: |
           mkdir -p  ${{ env.armbian_path }}/
           mkdir -p  ${{ env.armbian_file_path }}
+          mkdir -p  ${{ env.boot_img_file }}
           make ARCH=$ARCH CROSS_COMPILE=aarch64-none-linux-gnu-  xiaomi5s_defconfig
           make ARCH=$ARCH CROSS_COMPILE=aarch64-none-linux-gnu-  dtbs
           make ARCH=$ARCH CROSS_COMPILE=aarch64-none-linux-gnu-  Image  Image.gz modules -j$(nproc)
@@ -224,6 +230,23 @@ jobs:
           tar -zcf boot-${{ env.kernel_main_version }}.tar.gz   *
           echo "查看打包后所有文件"
           ls -lh
+
+      - name: Build  boot.img
+        run: |
+          cd ${{ env.boot_img_file }}
+          cp -a  ${{ env.armbian_file_path }}/*  .
+          cp -a  ${{ env.dtb_path }}/dtb/msm8996pro-xiaomi-capricorn.dtb  .
+          cat vmlinuz-${{ env.kernel_main_version }}  msm8996pro-xiaomi-capricorn.dtb  > kernel-dtb
+          mkbootimg --base 0x80000000 \
+            --kernel_offset 0x00008000 \
+            --ramdisk_offset 0x01000000 \
+            --tags_offset 0x00000100 \
+            --pagesize 4096 \
+            --ramdisk ./initrd.img-${{ env.kernel_main_version }} \
+            --cmdline "console=tty0 root=UUID=3d5a63f7-e85b-4637-af14-a6963f0f48d8 rw loglevel=3 maxcpus=4"\
+            --kernel ./kernel-dtb   -o ./xiaomi5s_${{ env.kernel_main_version }}_boot.img
+          echo "查看打包后的文件"
+          ls -lh  
       - name: Build  xiaomi5s-${{ env.kernel_main_version }}-boot
         run: |
           cd ${{ env.armbian_path }}/
@@ -239,11 +262,14 @@ jobs:
           
           artifacts: |
             ${{ env.armbian_path }}/xiaomi5s_boot-${{ env.kernel_main_version }}.tar.gz
+            ${{ env.boot_img_file }}/xiaomi5s_${{ env.kernel_main_version }}_boot.img
           body: |
-            tag：  ${{ github.event.inputs.target_tag }}
             Kernel version: ${{ env.kernel_main_version }}
             xiaomi5s 主线内核-${{ env.kernel_main_version }}
-                        
+            xiaomi5s_${{ env.kernel_main_version }}_boot.img通过fastboot刷入到boot分区
+            xiaomi5s_boot-${{ env.kernel_main_version }}.tar.gz包含了内核所需的dtb、kernel、headers、modules等，制作rootfs时使用。
+            xiaomi5s_${{ env.kernel_main_version }}_boot.img的rootfs的内核UUID为3d5a63f7-e85b-4637-af14-a6963f0f48d8
+            可以将boot.img解包重新打包指定新的UUID，也可以制作一个UUID为3d5a63f7-e85b-4637-af14-a6963f0f48d8的rootfs            
           draft: false
           prerelease: false
           allowUpdates: true
