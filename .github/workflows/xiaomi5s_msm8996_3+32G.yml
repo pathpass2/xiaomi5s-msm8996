@@ -210,7 +210,7 @@ jobs:
           echo "查看arch/arm64/boot/下编译的文件"
           ls ${{ env.src_path }}/arch/arm64/boot/
           
-          if [ -f zImage ];then
+          if [ -f ${{ env.src_path }}/arch/arm64/boot/zImage ];then
           cp -a ${{ env.src_path }}/arch/arm64/boot/zImage  ${{ env.armbian_file_path }}/vmlinuz-${{ env.kernel_main_version }}
           else
           cp -a ${{ env.src_path }}/arch/arm64/boot/Image.gz   ${{ env.armbian_file_path }}/vmlinuz-${{ env.kernel_main_version }}
