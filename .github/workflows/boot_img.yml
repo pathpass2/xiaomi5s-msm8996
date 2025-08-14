@@ -55,7 +55,12 @@ jobs:
             bison \
             libncurses-dev \
             initramfs-tools \
-            busybox-static
+            busybox-static  \
+            mkbootimg  \
+            simg2img  \
+            img2simg  \
+            build-essential  \
+            binfmt-support
           sudo -E apt-get -y install $(curl -fsSL https://tinyurl.com/ubuntu2204-build-armbian)
       - name: Setup ARM Toolchain
         run: |
