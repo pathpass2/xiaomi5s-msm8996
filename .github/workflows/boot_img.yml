@@ -77,7 +77,7 @@ jobs:
           echo "armbian_path=${{ env.src_path }}/armbian_boot" >> $GITHUB_ENV
           echo "dtb_path=${{ env.src_path }}/dtbs" >> $GITHUB_ENV
           echo "armbian_file_path=${{ env.src_path }}/armbian_boot_files" >> $GITHUB_ENV
-          echo "boot_img_file=${{ env.src_path }}/boot_img_file"
+          echo "boot_img_file=${{ env.src_path }}/boot_img_file"  >> $GITHUB_ENV
           
       - name: Build Kernel
         run: |
