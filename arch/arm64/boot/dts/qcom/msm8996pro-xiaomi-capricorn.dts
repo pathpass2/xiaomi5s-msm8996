@@ -17,6 +17,10 @@
 	qcom,board-id = <37 0>;
 };
 
+&blsp1_uart2 {
+	status = "okay";
+};
+
 &blsp2_i2c6 {
 	touchscreen@20 {
 		compatible = "syna,rmi4-i2c";
