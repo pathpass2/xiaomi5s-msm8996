@@ -3228,8 +3228,7 @@
 			pinctrl-1 = <&blsp1_uart2_sleep>;
 			dmas = <&blsp1_dma 2>, <&blsp1_dma 3>;
 			dma-names = "tx", "rx";
-//			status = "disabled";
-			status = "okay";
+			status = "disabled";
 		};
 
 		blsp1_spi1: spi@7575000 {
