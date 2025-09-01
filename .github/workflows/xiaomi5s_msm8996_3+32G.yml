@@ -6,7 +6,8 @@ on:
       target_tag:
         description: 'Source tag to build from'
         required: true
-        default: 'xiaomi5s_msm8996pro_v6.12.10'
+        #default: 'xiaomi5s_msm8996pro_v6.12.10'
+        default: 'msm8996-stable-6.12.y'
                 
 env:
   ARCH: arm64
