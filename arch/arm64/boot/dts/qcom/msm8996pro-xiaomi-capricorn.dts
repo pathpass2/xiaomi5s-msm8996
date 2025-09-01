@@ -15,6 +15,16 @@
 	chassis-type = "handset";
 	qcom,msm-id = <305 0x10000>;
 	qcom,board-id = <37 0>;
+
+	// 在这里添加 aliases 节点
+	aliases {
+		serial0 = &blsp1_uart2;
+	};
+
+	// 在这里添加 chosen 节点
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
 };
 
 &blsp1_uart2 {
