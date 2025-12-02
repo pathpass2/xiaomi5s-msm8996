@@ -1,4 +1,4 @@
-name: Build xiaomi5s_msm8996_branch_3+32G.img
+name: Build xiaomi5s_msm8996_branch
 
 on:
   workflow_dispatch:
