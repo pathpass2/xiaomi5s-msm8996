@@ -57,7 +57,8 @@
 };
 
 &mdss_dsi0 {
-	status = "okay";
+	//status = "okay";
+	status = "disabled";   //关闭屏幕
 
 	vdd-supply = <&vreg_l2a_1p25>;
 	vdda-supply = <&vreg_l19a_3p3>;
