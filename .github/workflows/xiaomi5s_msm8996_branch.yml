@@ -3,7 +3,7 @@ name: Build xiaomi5s_msm8996_branch
 on:
   workflow_dispatch:
     inputs:
-      target_tag:
+      source_branch:
         description: 'Source tag to build from'
         required: true
         default: 'msm8996-stable-6.12.y'
@@ -263,10 +263,10 @@ jobs:
           fi
           tar -zcf xiaomi5s_msm8996_firmware.tar.gz  firmware
           
-      - name: Upload Kernel to Release  ${{ github.event.inputs.source_branch }}
+      - name: Upload Kernel to Release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ github.event.inputs.source_branch }}
+          tag: ${{ github.event.inputs.source_branch }}-build-${{ env.kernel_main_version }}
           name: "xiaomi5s Kernel ${{ env.kernel_main_version }}"
           
           artifacts: |
